@@ -1,0 +1,11 @@
+maubot: 0.1.0
+id: org.taylorxie.llmplus
+version: 1.0.0
+license: MIT
+modules:
+  - maubot-llmplus
+main_class: AiBot
+config: true
+extra_files:
+  - base-config.yaml
+database: true

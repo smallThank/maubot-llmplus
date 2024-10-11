@@ -1,0 +1,32 @@
+allowed_users: []
+
+use_platform: local
+
+name:
+
+reply_in_thread:
+
+enable_multi_user:
+
+system_prompt:
+
+platforms:
+  local:
+    type: ollama
+    url: http://localhost:11434
+    api_key:
+    model: llama3.2
+    max_words: 1000
+  openai:
+    url:
+    api_key:
+    model:
+    max_tokens:
+    max_words:
+    temperature:
+  anthropic:
+    url:
+    api_key:
+    max_tokens:
+    model:
+    max_words:
