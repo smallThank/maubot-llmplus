@@ -11,7 +11,7 @@ from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
 配置文件加载
 """
 class Config(BaseProxyConfig):
-    def db_update(self, helper: ConfigUpdateHelper) -> None:
+    def do_update(self, helper: ConfigUpdateHelper) -> None:
         helper.copy("allowed_users")
         helper.copy("use_platform")
         helper.copy("name")
