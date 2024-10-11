@@ -3,7 +3,7 @@ id: org.taylorxie.llmplus
 version: 1.0.0
 license: MIT
 modules:
-  - maubot-llmplus
+  - maubot_llmplus
 main_class: AiBot
 config: true
 extra_files:
