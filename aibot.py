@@ -1,9 +1,16 @@
+import asyncio
+import json
+import os
 import re
-from typing import Type
+from datetime import datetime
 
-from maubot import Plugin
-from maubot.handlers import event
-from mautrix.types import EventType, MessageType, MessageEvent, RelationType, TextMessageEventContent, Format
+from typing import Type, Deque, Dict, Generator
+from mautrix.client import Client
+from collections import deque, defaultdict
+from maubot.handlers import command, event
+from maubot import Plugin, MessageEvent
+from mautrix.errors import MNotFound, MatrixRequestError
+from mautrix.types import Format, TextMessageEventContent, EventType, RoomID, UserID, MessageType, RelationType, EncryptedEvent
 from mautrix.util import markdown
 from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
 

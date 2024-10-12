@@ -1,5 +1,5 @@
 maubot: 0.1.0
-id: org.taylorxie.llmplus
+id: cn.tayxie.llmplus
 version: 1.0.0
 license: MIT
 modules:
