@@ -27,6 +27,7 @@ class AiBot(Plugin):
 
 
     async def start(self) -> None:
+        await super().start()
         # 加载并更新配置
         self.config.load_and_update()
         # 决定当前机器人的名称
