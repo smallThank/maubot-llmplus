@@ -131,7 +131,7 @@ class AiBotPlugin(Plugin):
             # 打开typing提示
             response = TextMessageEventContent(msgtype=MessageType.NOTICE, body=resp_content, format=Format.HTML,
                                                formatted_body=markdown.render(resp_content))
-            await event.respond(response)
+            await event.respond(response, in_thread=self.config['reply_in_thread'])
 
         except Exception as e:
             pass
