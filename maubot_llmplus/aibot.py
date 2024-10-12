@@ -57,7 +57,7 @@ class AiBotPlugin(Plugin):
         for u in self.config['allowed_users']:
             self.log.debug(f"bot: {sender} -> {u}")
             # 如果sender是allowed_user中的一员, 那么就允许发送消息给AI
-            if re.Match(u, sender):
+            if re.match(u, sender):
                 return True
         self.log.debug(f"{sender} doesn't match allowed_users")
         pass
