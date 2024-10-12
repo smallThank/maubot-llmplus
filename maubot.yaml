@@ -3,8 +3,8 @@ id: org.taylorxie.llmplus
 version: 1.0.0
 license: MIT
 modules:
-  - ai_bot
-main_class: AiBot
+  - aibot
+main_class: AiBotPlugin
 config: true
 extra_files:
   - base-config.yaml

@@ -20,7 +20,7 @@ class Config(BaseProxyConfig):
         helper.copy("system_prompt")
         helper.copy("platforms")
 
-class AiBot(Plugin):
+class AiBotPlugin(Plugin):
 
     # name of the bot
     name: str
