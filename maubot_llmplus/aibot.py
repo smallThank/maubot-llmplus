@@ -38,8 +38,8 @@ class AiBotPlugin(Plugin):
         # 加载并更新配置
         self.config.load_and_update()
         # 决定当前机器人的名称
-        self.name = self.config["name"] or \
-                    self.client.get_displayname(self.client.mxid) or \
+        self.name = self.config['name'] or \
+                    await self.client.get_displayname(self.client.mxid) or \
                     self.client.parse_user_id(self.client.mxid)[0]
 
     """
