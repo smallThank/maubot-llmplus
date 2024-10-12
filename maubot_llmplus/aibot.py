@@ -10,13 +10,16 @@ from collections import deque, defaultdict
 from maubot.handlers import command, event
 from maubot import Plugin, MessageEvent
 from mautrix.errors import MNotFound, MatrixRequestError
-from mautrix.types import Format, TextMessageEventContent, EventType, RoomID, UserID, MessageType, RelationType, EncryptedEvent
+from mautrix.types import Format, TextMessageEventContent, EventType, RoomID, UserID, MessageType, RelationType, \
+    EncryptedEvent
 from mautrix.util import markdown
 from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
 
 """
 配置文件加载
 """
+
+
 class Config(BaseProxyConfig):
     def do_update(self, helper: ConfigUpdateHelper) -> None:
         helper.copy("allowed_users")
@@ -27,11 +30,10 @@ class Config(BaseProxyConfig):
         helper.copy("system_prompt")
         helper.copy("platforms")
 
-class AiBotPlugin(Plugin):
 
+class AiBotPlugin(Plugin):
     # name of the bot
     name: str
-
 
     async def start(self) -> None:
         await super().start()
@@ -46,6 +48,7 @@ class AiBotPlugin(Plugin):
     判断sender是否是allowed_users中的成员
     如果是, 则可以发送消息给AI
     """
+
     def is_allow(self, sender: str) -> bool:
         # 如果列表中没有元素, 直接返回True
         if len(self.config['allowed_users']) <= 0:
@@ -70,6 +73,7 @@ class AiBotPlugin(Plugin):
     4. 当聊天室中只有两个人, 并且其中一个是机器人时
     5. 在thread中
     """
+
     async def should_respond(self, event: MessageEvent) -> bool:
         # 发送者是机器人本身, 返回False
         if event.sender == self.client.mxid:
@@ -81,8 +85,8 @@ class AiBotPlugin(Plugin):
             return False
 
         # 不是编辑消息 or 不是消息类型, 返回false
-        if(event.content['msgtype'] != MessageType.TEXT or
-            event.content.relates_to['rel_type'] == RelationType.REPLACE):
+        if (event.content['msgtype'] != MessageType.TEXT or
+                event.content.relates_to['rel_type'] == RelationType.REPLACE):
             return False
 
         # 检查是否发送消息中有带上机器人的别名
@@ -95,7 +99,8 @@ class AiBotPlugin(Plugin):
 
         # 在thread中时
         if self.config['reply_in_thread'] and event.content.relates_to.rel_type == RelationType.THREAD:
-            parent_event = await self.client.get_event(room_id=event.room_id, event_id=event.content.get_thread_parent())
+            parent_event = await self.client.get_event(room_id=event.room_id,
+                                                       event_id=event.content.get_thread_parent())
             return await self.should_respond(parent_event)
 
         # 如果是回复消息
@@ -117,12 +122,17 @@ class AiBotPlugin(Plugin):
 
         try:
             await event.mark_read()
-            resp_content = "response test"
-
             await self.client.set_typing(event.room_id, timeout=99999)
-            response = TextMessageEventContent(msgtype=MessageType.NOTICE, body = resp_content, format = Format.HTML,
-                                                       formatted_body = markdown.render(resp_content))
+            resp_content = "response test"
+            # ai gpt调用
+            # 关闭typing提示
+            await self.client.set_typing(event.room_id, timeout=0)
+
+            # 打开typing提示
+            response = TextMessageEventContent(msgtype=MessageType.NOTICE, body=resp_content, format=Format.HTML,
+                                               formatted_body=markdown.render(resp_content))
             await event.respond(response)
+
         except Exception as e:
             pass
 
@@ -131,5 +141,3 @@ class AiBotPlugin(Plugin):
     @classmethod
     def get_config_class(cls) -> Type[BaseProxyConfig]:
         return Config
-
-
