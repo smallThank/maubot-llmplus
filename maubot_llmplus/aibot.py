@@ -94,7 +94,7 @@ class AiBotPlugin(Plugin):
             return False
 
         # 检查是否发送消息中有带上机器人的别名
-        if re.search("(^|\\s)(@)?" + self.get_bot_name() + "([ :,.!?]|$)", event.content.body, re.IGNORECASE):
+        if re.search("(^|\\s)(@)?" + self.get_bot_name(self.config) + "([ :,.!?]|$)", event.content.body, re.IGNORECASE):
             return True
 
         # 当聊天室只有两个人并且其中一个是机器人时
