@@ -3,8 +3,8 @@ import json
 from mautrix.types import MessageEvent
 from mautrix.util.config import BaseProxyConfig
 
-from maubot_platform import platforms
-from maubot_platform.platforms import Platform, ChatCompletion
+from maubot_llmplus import platforms
+from maubot_llmplus.platforms import Platform, ChatCompletion
 
 
 class Ollama(Platform):

@@ -7,9 +7,9 @@ from mautrix.types import Format, TextMessageEventContent, EventType, MessageTyp
 from mautrix.util import markdown
 from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
 
-from maubot_platform.local_paltform import Ollama, LmStudio
-from maubot_platform import Platform
-from maubot_platform.thrid_platform import OpenAi, Anthropic
+from maubot_llmplus.local_paltform import Ollama, LmStudio
+from maubot_llmplus.platforms import Platform
+from maubot_llmplus.thrid_platform import OpenAi, Anthropic
 
 """
 配置文件加载

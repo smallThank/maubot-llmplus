@@ -1,7 +1,7 @@
 from mautrix.types import MessageEvent
 from mautrix.util.config import BaseProxyConfig
 
-from maubot_platform.platforms import Platform, ChatCompletion
+from maubot_llmplus.platforms import Platform, ChatCompletion
 
 
 class OpenAi(Platform):

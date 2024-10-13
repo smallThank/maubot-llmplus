@@ -17,6 +17,7 @@ platforms:
     api_key:
     model: llama3.2
     max_words: 1000
+    max_context_messages: 100
   openai:
     url:
     api_key:
