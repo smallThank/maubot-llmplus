@@ -23,7 +23,7 @@ class Ollama(Platform):
         full_context.extend(list(context))
 
         endpoint = f"{self.url}/api/chat"
-        req_body = {'model': self.model, 'messages': full_context, 'steam': False}
+        req_body = {'model': self.model, 'messages': full_context, 'stream': False}
         headers = {'Content-Type': 'application/json'}
         if self.api_key is not None:
             headers['Authorization'] = self.api_key
