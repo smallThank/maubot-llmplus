@@ -29,18 +29,15 @@ class Config(BaseProxyConfig):
 
 
 class AiBotPlugin(Plugin):
-    name: str
+    default_username: str
+    user_id: str
 
     async def start(self) -> None:
         await super().start()
         # 加载并更新配置
         self.config.load_and_update()
-        # 决定当前机器人的名称
-        self.name = self.config['name'] or \
-                    await self.client.get_displayname(self.client.mxid) or \
-                    self.client.parse_user_id(self.client.mxid)[0]
-        self.log.debug(f"DEBUG gpt plugin started with bot name: {self.name}")
-
+        self.default_username = await self.client.get_displayname(self.client.mxid)
+        self.user_id = self.client.parse_user_id(self.client.mxid)[0]
 
     """
     判断sender是否是allowed_users中的成员
@@ -72,6 +69,11 @@ class AiBotPlugin(Plugin):
     5. 在thread中
     """
 
+    def get_bot_name(self, config: BaseProxyConfig):
+        return config['name'] or \
+            self.default_username or \
+            self.user_id
+
     async def should_respond(self, event: MessageEvent) -> bool:
         # 发送者是机器人本身, 返回False
         if event.sender == self.client.mxid:
@@ -92,7 +94,7 @@ class AiBotPlugin(Plugin):
             return False
 
         # 检查是否发送消息中有带上机器人的别名
-        if re.search("(^|\\s)(@)?" + self.name + "([ :,.!?]|$)", event.content.body, re.IGNORECASE):
+        if re.search("(^|\\s)(@)?" + self.get_bot_name() + "([ :,.!?]|$)", event.content.body, re.IGNORECASE):
             return True
 
         # 当聊天室只有两个人并且其中一个是机器人时
