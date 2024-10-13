@@ -117,6 +117,7 @@ class AiBotPlugin(Plugin):
             await self.client.set_typing(event.room_id, timeout=99999)
             platform = self.get_ai_platform()
             chat_completion = await platform.create_chat_completion(self, event)
+            self.log.debug(f"发送结果 {chat_completion.message}, {chat_completion.model}, {chat_completion.finish_reason}")
             # ai gpt调用
             # 关闭typing提示
             await self.client.set_typing(event.room_id, timeout=0)
