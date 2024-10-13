@@ -26,7 +26,7 @@ class OpenAi(Platform):
 
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {self.config['gpt_api_key']}"
+            "Authorization": f"Bearer {self.api_key}"
         }
         data = {
             "model": self.model,
