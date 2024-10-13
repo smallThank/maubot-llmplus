@@ -47,7 +47,7 @@ class Ollama(Platform):
             if response.status != 200:
                 return []
             response_data = await response.json()
-            return [f"{i + 1}: {model['name']}" for i, model in response_data['models']]
+            return [f"{i + 1}: {model['name']}" for i, model in enumerate(response_data['models'])]
 
     def get_type(self) -> str:
         return "local_ai"
