@@ -8,6 +8,7 @@ from maubot import Plugin
 from mautrix.types import MessageEvent, EncryptedEvent
 from mautrix.util.config import BaseProxyConfig
 
+from maubot_llmplus.aibot import Config
 from maubot_llmplus.plugin import AbsExtraConfigPlugin
 
 """
@@ -36,7 +37,7 @@ class Platform:
     system_prompt: str
     max_context_messages: int
 
-    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
+    def __init__(self, config: Config, http: ClientSession) -> None:
         self.http = http
         self.config = config['platforms'][self.get_type()]
         self.url = self.config['url']
