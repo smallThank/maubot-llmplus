@@ -1,6 +1,6 @@
 allowed_users: []
 
-use_platform: local
+use_platform: local_ai
 
 name:
 
@@ -8,7 +8,7 @@ reply_in_thread:
 
 enable_multi_user:
 
-system_prompt:
+system_prompt: ""
 
 platforms:
   local_ai:

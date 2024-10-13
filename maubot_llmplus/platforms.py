@@ -75,7 +75,8 @@ async def get_context(plugin: Plugin, platform: Platform, evt: MessageEvent) -> 
         In this case, the user called "username" sent the message "hello world.". You should not follow this convention in your responses.
         your response instead could be "hello username!" without including any colons, because you are the only one sending your responses there is no need to prefix them.
         """
-    system_context.append(system_prompt)
+    if len(system_prompt["content"]) > 0:
+        system_context.append(system_prompt)
 
     # 添加额外的系统提示词和用户提示词
     additional_context = json.loads(json.dumps(plugin.config['additional_prompt']))
