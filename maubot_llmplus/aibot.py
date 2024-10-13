@@ -115,7 +115,7 @@ class AiBotPlugin(Plugin):
         try:
             await event.mark_read()
             await self.client.set_typing(event.room_id, timeout=99999)
-            platform = self.get_platform()
+            platform = self.get_ai_platform()
             chat_completion = platform.create_chat_completion(event)
             # ai gpt调用
             # 关闭typing提示
@@ -133,7 +133,7 @@ class AiBotPlugin(Plugin):
 
         return None
 
-    async def get_platform(self) -> Platform:
+    def get_ai_platform(self) -> Platform:
         use_platform = self.config['use_platform']
         if use_platform == 'local_ai':
             type = self.config['platforms']['local_ai']['type']
