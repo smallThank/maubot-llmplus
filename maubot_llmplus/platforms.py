@@ -131,6 +131,7 @@ async def generate_context_messages(plugin: Plugin, platform: Platform, evt: Mes
     else:
         event_context = await plugin.client.get_event_context(room_id=evt.room_id, event_id=evt.event_id,
                                                             limit=platform.max_context_messages * 2)
+        plugin.log.debug(f"event_context: {event_context}")
         previous_messages = iter(event_context.events_before)
         for evt in previous_messages:
 

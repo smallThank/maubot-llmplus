@@ -27,7 +27,9 @@ class Ollama(Platform):
         headers = {}
         if self.api_key is not None:
             headers['Authorization'] = self.api_key
+        plugin.log.debug(f"{json.dumps(req_body)}")
         async with self.http.post(endpoint, headers=headers, data=json.dumps(req_body)) as response:
+            plugin.log.debug(f"响应内容：{response.status}, {response.json()}")
             if response.status != 200:
                 return ChatCompletion(
                     message={},
