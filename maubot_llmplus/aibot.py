@@ -76,7 +76,7 @@ class AiBotPlugin(Plugin):
             return False
 
         # 如果发送的消息中，第一个字符是感叹号，不进行回复
-        if event.content[0] == '!':
+        if event.content.body[0] == '!':
             return False
 
         # 判断这个用户是否在允许列表中, 不存在返回False
@@ -90,7 +90,7 @@ class AiBotPlugin(Plugin):
             return False
 
         # 检查是否发送消息中有带上机器人的别名
-        if re.search("(^|\s)(@)?" + self.name + "([ :,.!?]|$)", event.content.body, re.IGNORECASE):
+        if re.search("(^|\\s)(@)?" + self.name + "([ :,.!?]|$)", event.content.body, re.IGNORECASE):
             return True
 
         # 当聊天室只有两个人并且其中一个是机器人时
