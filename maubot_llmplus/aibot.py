@@ -147,7 +147,8 @@ class AiBotPlugin(AbsExtraConfigPlugin):
 
     @ai_command.subcommand(help="")
     @command.argument("argus")
-    async def model(self, event: MessageEvent, argus: str):
+    @command.argument("argus1")
+    async def model(self, event: MessageEvent, argus: str, argus1):
         # 如果是list表示查看当前可以使用的模型列表
         if argus == 'list':
             platform = self.get_ai_platform()
