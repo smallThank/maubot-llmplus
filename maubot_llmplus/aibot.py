@@ -112,6 +112,7 @@ class AiBotPlugin(Plugin):
             return
 
         try:
+            self.log.debug("开始发送消息")
             await event.mark_read()
             await self.client.set_typing(event.room_id, timeout=99999)
             platform = self.get_ai_platform()
@@ -124,7 +125,7 @@ class AiBotPlugin(Plugin):
             response = TextMessageEventContent(msgtype=MessageType.IMAGE, body=resp_content, format=Format.HTML,
                                                formatted_body=markdown.render(resp_content))
             await event.respond(response, in_thread=self.config['reply_in_thread'])
-
+            self.log.debug("发送结束")
         except Exception as e:
             self.log.exception(f"Something went wrong: {e}")
             await event.respond(f"Something went wrong: {e}")
