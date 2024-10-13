@@ -93,7 +93,7 @@ async def get_context(plugin: Plugin, platform: Platform, evt: MessageEvent) -> 
     # 计算系统提示词单词数
     word_count = sum([len(m["content"].split()) for m in system_context])
     message_count = len(system_context) - 1
-    async for next_event in generate_context_messages(plugin, evt):
+    async for next_event in generate_context_messages(plugin, platform, evt):
         # 如果不是文本类型，就跳过
         try:
             if not next_event.content.msgtype.is_text:
@@ -122,7 +122,7 @@ async def get_context(plugin: Plugin, platform: Platform, evt: MessageEvent) -> 
 
 
 
-async def generate_context_messages(plugin: Plugin, evt: MessageEvent) -> Generator[MessageEvent, None, None]:
+async def generate_context_messages(plugin: Plugin, platform: Platform, evt: MessageEvent) -> Generator[MessageEvent, None, None]:
     yield evt
     if plugin.config['reply_in_thread']:
         while evt.content.relates_to.in_reply_to:
@@ -130,7 +130,7 @@ async def generate_context_messages(plugin: Plugin, evt: MessageEvent) -> Genera
             yield evt
     else:
         event_context = await plugin.client.get_event_context(room_id=evt.room_id, event_id=evt.event_id,
-                                                            limit=plugin.config["max_context_messages"] * 2)
+                                                            limit=platform.max_context_messages * 2)
         previous_messages = iter(event_context.events_before)
         for evt in previous_messages:
 
