@@ -8,7 +8,6 @@ from maubot import Plugin
 from mautrix.types import MessageEvent, EncryptedEvent
 from mautrix.util.config import BaseProxyConfig
 
-from maubot_llmplus.aibot import Config
 from maubot_llmplus.plugin import AbsExtraConfigPlugin
 
 """
