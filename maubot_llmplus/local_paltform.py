@@ -46,8 +46,8 @@ class Ollama(Platform):
         async with self.http.get(full_url) as response:
             if response.status != 200:
                 return []
-            response_data = json.loads(await response.json())
-            return [model['name'] for model in response_data]
+            response_data = await response.json()
+            return [model['name'] for model in response_data['models']]
 
     def get_type(self) -> str:
         return "local_ai"
