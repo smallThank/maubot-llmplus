@@ -27,6 +27,7 @@ class Ollama(Platform):
         headers = {}
         if self.api_key is not None:
             headers['Authorization'] = self.api_key
+        headers['Content-Type'] = 'application/json'
         plugin.log.debug(f"{json.dumps(req_body)}")
         async with self.http.post(endpoint, headers=headers, data=json.dumps(req_body)) as response:
             plugin.log.debug(f"响应内容：{response.status}, {response.json()}")
@@ -36,11 +37,11 @@ class Ollama(Platform):
                     finish_reason=f"http status {response.status}",
                     model=None
                 )
-            response_json = await response.json()
+            response_json = response.json()
             return ChatCompletion(
                 message=response_json['message'],
                 finish_reason='success',
-                model=response_json.get('model', None)
+                model=response_json['model']
             )
 
     def get_type(self) -> str:
