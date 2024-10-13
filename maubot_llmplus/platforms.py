@@ -37,7 +37,7 @@ class Platform:
     system_prompt: str
     max_context_messages: int
 
-    def __init__(self, config: Config, http: ClientSession) -> None:
+    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
         self.http = http
         self.config = config['platforms'][self.get_type()]
         self.url = self.config['url']
