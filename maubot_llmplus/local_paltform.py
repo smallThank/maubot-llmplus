@@ -1,5 +1,6 @@
 import json
 
+from aiohttp import ClientSession
 from mautrix.types import MessageEvent
 from mautrix.util.config import BaseProxyConfig
 
@@ -11,8 +12,8 @@ from maubot_llmplus.platforms import Platform, ChatCompletion
 class Ollama(Platform):
     chat_api: str
 
-    def __init__(self, config: BaseProxyConfig) -> None:
-        super().__init__(config)
+    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
+        super().__init__(config, http)
         self.chat_api = '/api/chat'
 
     async def create_chat_completion(self, evt: MessageEvent) -> ChatCompletion:
