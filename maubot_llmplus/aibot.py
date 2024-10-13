@@ -28,7 +28,7 @@ class Config(BaseProxyConfig):
         helper.copy("system_prompt")
         helper.copy("platforms")
         helper.copy("additional_prompt")
-        super._cur_model = self['platforms'][self['use_platform']]['model']
+        super._cur_model = self['platforms'][str(self['use_platform'])]['model']
 
 
 class AiBotPlugin(AbsExtraConfigPlugin):
