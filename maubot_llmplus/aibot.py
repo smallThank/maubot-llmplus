@@ -9,7 +9,7 @@ from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
 
 from maubot_llmplus.local_paltform import Ollama, LmStudio
 from maubot_llmplus.platforms import Platform
-from maubot_llmplus.plugin import AbsExtraConfigPlugin
+from maubot_llmplus.plugin import AbsExtraConfigPlugin, Config
 from maubot_llmplus.thrid_platform import OpenAi, Anthropic
 
 class AiBotPlugin(AbsExtraConfigPlugin):
