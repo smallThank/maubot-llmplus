@@ -11,9 +11,14 @@ from maubot.handlers import command, event
 from maubot import Plugin, MessageEvent
 from mautrix.errors import MNotFound, MatrixRequestError
 from mautrix.types import Format, TextMessageEventContent, EventType, RoomID, UserID, MessageType, RelationType, \
-    EncryptedEvent
+    EncryptedEvent, MediaMessageEventContent, ImageInfo, EncryptedFile
 from mautrix.util import markdown
 from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
+
+from maubot_llmplus.llm import platforms
+from maubot_llmplus.llm.local_paltform import Ollama, LmStudio
+from maubot_llmplus.llm.platforms import Platform
+from maubot_llmplus.llm.thrid_platform import OpenAi, Anthropic
 
 """
 配置文件加载
@@ -29,6 +34,7 @@ class Config(BaseProxyConfig):
         helper.copy("enable_multi_user")
         helper.copy("system_prompt")
         helper.copy("platforms")
+        helper.copy("additional_prompt")
 
 
 class AiBotPlugin(Plugin):
@@ -109,11 +115,6 @@ class AiBotPlugin(Plugin):
             if parent_event.sender == self.client.mxid:
                 return True
 
-    async def get_context(self, event: MessageEvent):
-        return None
-
-    async def _ai_call(self, prompt):
-        return None
 
     @event.on(EventType.ROOM_MESSAGE)
     async def on_message(self, event: MessageEvent) -> None:
@@ -123,20 +124,39 @@ class AiBotPlugin(Plugin):
         try:
             await event.mark_read()
             await self.client.set_typing(event.room_id, timeout=99999)
-            resp_content = "response test"
+            platform = self.get_platform()
+            chat_completion = platform.create_chat_completion(event)
             # ai gpt调用
             # 关闭typing提示
             await self.client.set_typing(event.room_id, timeout=0)
-
             # 打开typing提示
-            response = TextMessageEventContent(msgtype=MessageType.NOTICE, body=resp_content, format=Format.HTML,
+            resp_content = chat_completion.message['content']
+            response = TextMessageEventContent(msgtype=MessageType.IMAGE, body=resp_content, format=Format.HTML,
                                                formatted_body=markdown.render(resp_content))
             await event.respond(response, in_thread=self.config['reply_in_thread'])
 
         except Exception as e:
+            self.log.exception(f"Something went wrong: {e}")
+            await event.respond(f"Something went wrong: {e}")
             pass
 
-        return None;
+        return None
+
+    async def get_platform(self) -> Platform:
+        use_platform = self.config['use_platform']
+        if use_platform == 'local_ai':
+            type = self.config['platforms']['local_ai']['type']
+            if type == 'ollama':
+                return Ollama(self.config)
+            elif type == 'lmstudio':
+                return LmStudio(self.config)
+            else:
+                raise ValueError(f"not found platform type: {type}")
+        if use_platform == 'openai':
+            return OpenAi(self.config)
+        if use_platform == 'anthropic':
+            return Anthropic(self.config)
+        raise ValueError(f"unknown backend type {use_platform}")
 
     @classmethod
     def get_config_class(cls) -> Type[BaseProxyConfig]:

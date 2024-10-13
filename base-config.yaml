@@ -11,7 +11,7 @@ enable_multi_user:
 system_prompt:
 
 platforms:
-  local:
+  local_ai:
     type: ollama
     url: http://localhost:11434
     api_key:
@@ -30,3 +30,9 @@ platforms:
     max_tokens:
     model:
     max_words:
+
+additional_prompt:
+  - role: user
+    content: xxx
+  - role: system
+    content: xxx
