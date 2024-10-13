@@ -1,6 +1,7 @@
 import json
 
 from aiohttp import ClientSession
+from maubot import Plugin
 from mautrix.types import MessageEvent
 from mautrix.util.config import BaseProxyConfig
 
@@ -16,9 +17,9 @@ class Ollama(Platform):
         super().__init__(config, http)
         self.chat_api = '/api/chat'
 
-    async def create_chat_completion(self, evt: MessageEvent) -> ChatCompletion:
+    async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
         full_context = []
-        context = maubot_llmplus.platforms.get_context(evt)
+        context = maubot_llmplus.platforms.get_context(plugin, evt)
         full_context.extend(list(context))
 
         endpoint = f"{self.url}/api/chat"
@@ -50,5 +51,5 @@ class LmStudio(Platform):
         super().__init__(config, http)
         pass
 
-    async def create_chat_completion(self, evt: MessageEvent) -> ChatCompletion:
+    async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
         pass

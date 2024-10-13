@@ -1,4 +1,5 @@
 from aiohttp import ClientSession
+from maubot import Plugin
 from mautrix.types import MessageEvent
 from mautrix.util.config import BaseProxyConfig
 
@@ -10,7 +11,7 @@ class OpenAi(Platform):
     def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
         super().__init__(config, http)
 
-    async def create_chat_completion(self, evt: MessageEvent) -> ChatCompletion:
+    async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
         # 获取系统提示词
         # 获取额外的其他角色的提示词： role: user role: system
 
@@ -25,7 +26,7 @@ class Anthropic(Platform):
     def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
         super().__init__(config, http)
 
-    async def create_chat_completion(self, evt: MessageEvent) -> ChatCompletion:
+    async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
         # 获取系统提示词
         # 获取额外的其他角色的提示词： role: user role: system
 
