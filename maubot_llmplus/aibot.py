@@ -12,26 +12,6 @@ from maubot_llmplus.platforms import Platform
 from maubot_llmplus.plugin import AbsExtraConfigPlugin
 from maubot_llmplus.thrid_platform import OpenAi, Anthropic
 
-"""
-配置文件加载
-"""
-
-
-class Config(BaseProxyConfig):
-
-    def do_update(self, helper: ConfigUpdateHelper) -> None:
-        helper.copy("allowed_users")
-        helper.copy("use_platform")
-        helper.copy("name")
-        helper.copy("reply_in_thread")
-        helper.copy("enable_multi_user")
-        helper.copy("system_prompt")
-        helper.copy("platforms")
-        helper.copy("additional_prompt")
-
-        super._cur_model = helper.base['platforms'][helper.base['use_platform']]['model']
-
-
 class AiBotPlugin(AbsExtraConfigPlugin):
 
     async def start(self) -> None:
