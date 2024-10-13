@@ -75,6 +75,10 @@ class AiBotPlugin(Plugin):
         if event.sender == self.client.mxid:
             return False
 
+        # 如果发送的消息中，第一个字符是感叹号，不进行回复
+        if event.content[0] == '!':
+            return False
+
         # 判断这个用户是否在允许列表中, 不存在返回False
         # 如果列表为空, 继续往下执行
         if not self.is_allow(event.sender):
