@@ -8,7 +8,7 @@ from maubot import Plugin
 from mautrix.types import MessageEvent, EncryptedEvent
 from mautrix.util.config import BaseProxyConfig
 
-from maubot_llmplus import AiBotPlugin
+from maubot_llmplus.aibot import AiBotPlugin
 
 """
     AI响应对象
