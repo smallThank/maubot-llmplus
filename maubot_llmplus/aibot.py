@@ -18,6 +18,7 @@ from maubot_llmplus.thrid_platform import OpenAi, Anthropic
 
 
 class Config(BaseProxyConfig):
+
     def do_update(self, helper: ConfigUpdateHelper) -> None:
         helper.copy("allowed_users")
         helper.copy("use_platform")
@@ -27,6 +28,7 @@ class Config(BaseProxyConfig):
         helper.copy("system_prompt")
         helper.copy("platforms")
         helper.copy("additional_prompt")
+        super._cur_model = self['platforms'][self['use_platform']]['model']
 
 
 class AiBotPlugin(AbsExtraConfigPlugin):
@@ -182,7 +184,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
             models = platform.list_models()
             if f"- {arg_elements[1]}" in models:
                 self.log.debug(f"switch model: {arg_elements[1]}")
-                self.model = arg_elements[1]
+                self.config._cur_model = arg_elements[1]
                 await event.react("✅")
             else:
                 await event.reply("not found valid model")
