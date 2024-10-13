@@ -8,8 +8,8 @@ from maubot_llmplus.platforms import Platform, ChatCompletion
 
 class OpenAi(Platform):
 
-    def __init__(self, config: BaseProxyConfig, name: str, http: ClientSession) -> None:
-        super().__init__(config, name, http)
+    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
+        super().__init__(config, http)
 
     async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
         # 获取系统提示词
@@ -23,8 +23,8 @@ class OpenAi(Platform):
 
 class Anthropic(Platform):
 
-    def __init__(self, config: BaseProxyConfig, name: str, http: ClientSession) -> None:
-        super().__init__(config, name, http)
+    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
+        super().__init__(config, http)
 
     async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
         # 获取系统提示词

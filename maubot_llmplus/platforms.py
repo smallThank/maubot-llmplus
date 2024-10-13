@@ -33,9 +33,8 @@ class Platform:
     additional_prompt: List[dict]
     system_prompt: str
     max_context_messages: int
-    name: str
 
-    def __init__(self, config: BaseProxyConfig, name: str, http: ClientSession) -> None:
+    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
         self.http = http
         self.config = config['platforms'][self.get_type()]
         self.url = self.config['url']
@@ -45,7 +44,6 @@ class Platform:
         self.max_context_messages = self.config['max_context_messages']
         self.additional_prompt = config['additional_prompt']
         self.system_prompt = config['system_prompt']
-        self.name = name
 
     """a
         调用AI对话接口, 响应结果

@@ -14,8 +14,8 @@ from maubot_llmplus.platforms import Platform, ChatCompletion
 class Ollama(Platform):
     chat_api: str
 
-    def __init__(self, config: BaseProxyConfig, name: str, http: ClientSession) -> None:
-        super().__init__(config, name, http)
+    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
+        super().__init__(config, http)
         self.chat_api = '/api/chat'
 
     async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
@@ -55,8 +55,8 @@ class Ollama(Platform):
 
 class LmStudio(Platform):
 
-    def __init__(self, config: BaseProxyConfig, name: str, http: ClientSession) -> None:
-        super().__init__(config, name, http)
+    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
+        super().__init__(config, http)
         pass
 
     async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
