@@ -168,7 +168,7 @@ class AiBotPlugin(Plugin):
         if argus == 'list':
             platform = self.get_ai_platform()
             models = await platform.list_models()
-            await event.reply("\n".join(models))
+            await event.reply("\n".join(models), markdown=True)
 
         # 如果不是，如果是其他的名称，表示这是一个模型名
 
