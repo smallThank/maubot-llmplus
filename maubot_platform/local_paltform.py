@@ -1,15 +1,10 @@
 import json
-import platform
-from collections import deque
-from typing import List
 
-from maubot import Plugin
 from mautrix.types import MessageEvent
 from mautrix.util.config import BaseProxyConfig
 
-from maubot_llmplus import AiBotPlugin
-from maubot_llmplus.llm import platforms
-from maubot_llmplus.llm.platforms import Platform, ChatCompletion
+from maubot_platform import platforms
+from maubot_platform.platforms import Platform, ChatCompletion
 
 
 class Ollama(Platform):

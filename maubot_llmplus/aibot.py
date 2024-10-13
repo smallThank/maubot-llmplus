@@ -1,23 +1,15 @@
-import asyncio
-import json
-import os
 import re
-from datetime import datetime
 
-from typing import Type, Deque, Dict, Generator
-from mautrix.client import Client
-from collections import deque, defaultdict
-from maubot.handlers import command, event
+from typing import Type
+from maubot.handlers import event
 from maubot import Plugin, MessageEvent
-from mautrix.errors import MNotFound, MatrixRequestError
-from mautrix.types import Format, TextMessageEventContent, EventType, RoomID, UserID, MessageType, RelationType, \
-    EncryptedEvent, MediaMessageEventContent, ImageInfo, EncryptedFile
+from mautrix.types import Format, TextMessageEventContent, EventType, MessageType, RelationType
 from mautrix.util import markdown
 from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
 
-from maubot_llmplus.llm.local_paltform import Ollama, LmStudio
-from maubot_llmplus.llm.platforms import Platform
-from maubot_llmplus.llm.thrid_platform import OpenAi, Anthropic
+from maubot_platform.local_paltform import Ollama, LmStudio
+from maubot_platform import Platform
+from maubot_platform.thrid_platform import OpenAi, Anthropic
 
 """
 配置文件加载

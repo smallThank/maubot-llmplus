@@ -3,6 +3,7 @@ id: cn.tayxie.llmplus
 version: 1.0.0
 license: MIT
 modules:
+  - maubot_platform
   - maubot_llmplus
 main_class: AiBotPlugin
 config: true
