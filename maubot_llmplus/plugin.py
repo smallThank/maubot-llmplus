@@ -11,7 +11,7 @@ class AbsExtraConfigPlugin(Plugin):
         await super().start()
         self.default_username = await self.client.get_displayname(self.client.mxid)
         self.user_id = self.client.parse_user_id(self.client.mxid)[0]
-        self.model = self.config['platform'][self.config['use_platform']]['model']
+        self.model = self.config['platforms'][self.config['use_platform']]['model']
 
     def get_bot_name(self) -> str:
         return self.config['name'] or \
