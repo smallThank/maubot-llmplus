@@ -1,7 +1,7 @@
 import re
 
 from typing import Type
-from maubot.handlers import event
+from maubot.handlers import command, event
 from maubot import Plugin, MessageEvent
 from mautrix.types import Format, TextMessageEventContent, EventType, MessageType, RelationType
 from mautrix.util import markdown
@@ -14,6 +14,7 @@ from maubot_llmplus.thrid_platform import OpenAi, Anthropic
 """
 配置文件加载
 """
+
 
 class Config(BaseProxyConfig):
     def do_update(self, helper: ConfigUpdateHelper) -> None:
@@ -28,7 +29,6 @@ class Config(BaseProxyConfig):
 
 
 class AiBotPlugin(Plugin):
-
     name: str
 
     async def start(self) -> None:
@@ -105,19 +105,18 @@ class AiBotPlugin(Plugin):
             if parent_event.sender == self.client.mxid:
                 return True
 
-
     @event.on(EventType.ROOM_MESSAGE)
     async def on_message(self, event: MessageEvent) -> None:
         if not await self.should_respond(event):
             return
 
         try:
-            self.log.debug("开始发送消息")
             await event.mark_read()
             await self.client.set_typing(event.room_id, timeout=99999)
             platform = self.get_ai_platform()
             chat_completion = await platform.create_chat_completion(self, event)
-            self.log.debug(f"发送结果 {chat_completion.message}, {chat_completion.model}, {chat_completion.finish_reason}")
+            self.log.debug(
+                f"发送结果 {chat_completion.message}, {chat_completion.model}, {chat_completion.finish_reason}")
             # ai gpt调用
             # 关闭typing提示
             await self.client.set_typing(event.room_id, timeout=0)
@@ -126,7 +125,6 @@ class AiBotPlugin(Plugin):
             response = TextMessageEventContent(msgtype=MessageType.TEXT, body=resp_content, format=Format.HTML,
                                                formatted_body=markdown.render(resp_content))
             await event.respond(response, in_thread=self.config['reply_in_thread'])
-            self.log.debug("发送结束")
         except Exception as e:
             self.log.exception(f"Something went wrong: {e}")
             await event.respond(f"Something went wrong: {e}")
