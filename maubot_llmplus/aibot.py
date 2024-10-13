@@ -172,6 +172,20 @@ class AiBotPlugin(AbsExtraConfigPlugin):
             await event.reply("\n".join(models), markdown=True)
 
         # 如果不是，如果是其他的名称，表示这是一个模型名
+        # 如果是use为第二命令,则表示要切换模型
+        if argus.startswith('use'):
+            arg_elements = argus.strip().split(" ", 2)
+            # 如果命令小于2的个数，就没有写模型名，无法切换
+            if len(arg_elements) < 2:
+                await event.reply("give me a model name after 'use' command", markdown=True)
+            platform = self.get_ai_platform()
+            models = platform.list_models()
+            if f"- {arg_elements[1]}" in models:
+                self.log.debug(f"switch model: {arg_elements[1]}")
+                self.model = arg_elements[1]
+                await event.react("✅")
+            else:
+                await event.reply("not found valid model")
 
     @classmethod
     def get_config_class(cls) -> Type[BaseProxyConfig]:
