@@ -167,7 +167,7 @@ class AiBotPlugin(Plugin):
         # 如果是list表示查看当前可以使用的模型列表
         if argus == 'list':
             platform = self.get_ai_platform()
-            models = platform.list_models()
+            models = await platform.list_models()
             await event.reply("\n".join(models))
 
         # 如果不是，如果是其他的名称，表示这是一个模型名
