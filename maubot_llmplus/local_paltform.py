@@ -37,7 +37,7 @@ class Ollama(Platform):
                     finish_reason=f"http status {response.status}",
                     model=None
                 )
-            response_json = response.json()
+            response_json = await response.json()
             return ChatCompletion(
                 message=response_json['message'],
                 finish_reason='success',
