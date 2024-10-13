@@ -123,7 +123,7 @@ class AiBotPlugin(Plugin):
             await self.client.set_typing(event.room_id, timeout=0)
             # 打开typing提示
             resp_content = chat_completion.message['content']
-            response = TextMessageEventContent(msgtype=MessageType.IMAGE, body=resp_content, format=Format.HTML,
+            response = TextMessageEventContent(msgtype=MessageType.TEXT, body=resp_content, format=Format.HTML,
                                                formatted_body=markdown.render(resp_content))
             await event.respond(response, in_thread=self.config['reply_in_thread'])
             self.log.debug("发送结束")
