@@ -3,7 +3,8 @@ import json
 from mautrix.types import MessageEvent
 from mautrix.util.config import BaseProxyConfig
 
-from maubot_llmplus import platforms
+import maubot_llmplus
+import maubot_llmplus.platforms
 from maubot_llmplus.platforms import Platform, ChatCompletion
 
 
@@ -16,7 +17,7 @@ class Ollama(Platform):
 
     async def create_chat_completion(self, evt: MessageEvent) -> ChatCompletion:
         full_context = []
-        context = platforms.get_context(evt)
+        context = maubot_llmplus.platforms.get_context(evt)
         full_context.extend(list(context))
 
         endpoint = f"{self.url}/api/chat"
