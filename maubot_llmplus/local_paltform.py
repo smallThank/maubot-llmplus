@@ -45,4 +45,10 @@ class Ollama(Platform):
 
 
 class LmStudio(Platform):
-    pass
+
+    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
+        super().__init__(config, http)
+        pass
+
+    async def create_chat_completion(self, evt: MessageEvent) -> ChatCompletion:
+        pass

@@ -138,15 +138,15 @@ class AiBotPlugin(Plugin):
         if use_platform == 'local_ai':
             type = self.config['platforms']['local_ai']['type']
             if type == 'ollama':
-                return Ollama(self.config)
+                return Ollama(self.config, self.http)
             elif type == 'lmstudio':
-                return LmStudio(self.config)
+                return LmStudio(self.config, self.http)
             else:
                 raise ValueError(f"not found platform type: {type}")
         if use_platform == 'openai':
-            return OpenAi(self.config)
+            return OpenAi(self.config, self.http)
         if use_platform == 'anthropic':
-            return Anthropic(self.config)
+            return Anthropic(self.config, self.http)
         raise ValueError(f"unknown backend type {use_platform}")
 
     @classmethod
