@@ -9,6 +9,7 @@ from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
 
 from maubot_llmplus.local_paltform import Ollama, LmStudio
 from maubot_llmplus.platforms import Platform
+from maubot_llmplus.plugin import AbsExtraConfigPlugin
 from maubot_llmplus.thrid_platform import OpenAi, Anthropic
 
 """
@@ -27,24 +28,13 @@ class Config(BaseProxyConfig):
         helper.copy("platforms")
         helper.copy("additional_prompt")
 
-class AbsAiBotPlugin(Plugin):
-    default_username: str
-    user_id: str
 
-    def get_bot_name(self) -> str:
-        return self.config['name'] or \
-            self.default_username or \
-            self.user_id
-
-
-class AiBotPlugin(AbsAiBotPlugin):
+class AiBotPlugin(AbsExtraConfigPlugin):
 
     async def start(self) -> None:
         await super().start()
         # 加载并更新配置
         self.config.load_and_update()
-        self.default_username = await self.client.get_displayname(self.client.mxid)
-        self.user_id = self.client.parse_user_id(self.client.mxid)[0]
 
     """
     判断sender是否是allowed_users中的成员
@@ -114,6 +104,7 @@ class AiBotPlugin(AbsAiBotPlugin):
             parent_event = await self.client.get_event(room_id=event.room_id, event_id=event.content.get_reply_to())
             if parent_event.sender == self.client.mxid:
                 return True
+
 
     @event.on(EventType.ROOM_MESSAGE)
     async def on_message(self, event: MessageEvent) -> None:

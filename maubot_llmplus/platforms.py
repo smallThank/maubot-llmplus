@@ -8,7 +8,7 @@ from maubot import Plugin
 from mautrix.types import MessageEvent, EncryptedEvent
 from mautrix.util.config import BaseProxyConfig
 
-from maubot_llmplus.aibot import AbsAiBotPlugin
+from maubot_llmplus.plugin import AbsExtraConfigPlugin
 
 """
     AI响应对象
@@ -62,7 +62,7 @@ class Platform:
 
 
 
-async def get_context(plugin: AbsAiBotPlugin, platform: Platform, evt: MessageEvent) -> deque:
+async def get_context(plugin: AbsExtraConfigPlugin, platform: Platform, evt: MessageEvent) -> deque:
     # 创建系统提示词上下文
     system_context = deque()
     # 生成当前时间
