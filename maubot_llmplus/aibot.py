@@ -27,10 +27,17 @@ class Config(BaseProxyConfig):
         helper.copy("platforms")
         helper.copy("additional_prompt")
 
-
-class AiBotPlugin(Plugin):
+class AbsAiBotPlugin(Plugin):
     default_username: str
     user_id: str
+
+    def get_bot_name(self) -> str:
+        return self.config['name'] or \
+            self.default_username or \
+            self.user_id
+
+
+class AiBotPlugin(AbsAiBotPlugin):
 
     async def start(self) -> None:
         await super().start()
@@ -69,11 +76,6 @@ class AiBotPlugin(Plugin):
     5. 在thread中
     """
 
-    def get_bot_name(self, config: BaseProxyConfig):
-        return config['name'] or \
-            self.default_username or \
-            self.user_id
-
     async def should_respond(self, event: MessageEvent) -> bool:
         # 发送者是机器人本身, 返回False
         if event.sender == self.client.mxid:
@@ -94,7 +96,7 @@ class AiBotPlugin(Plugin):
             return False
 
         # 检查是否发送消息中有带上机器人的别名
-        if re.search("(^|\\s)(@)?" + self.get_bot_name(self.config) + "([ :,.!?]|$)", event.content.body, re.IGNORECASE):
+        if re.search("(^|\\s)(@)?" + self.get_bot_name() + "([ :,.!?]|$)", event.content.body, re.IGNORECASE):
             return True
 
         # 当聊天室只有两个人并且其中一个是机器人时
