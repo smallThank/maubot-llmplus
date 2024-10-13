@@ -54,6 +54,9 @@ class Platform:
     async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
         raise NotImplementedError()
 
+    async def list_models(self) -> List[str]:
+        raise NotImplementedError()
+
     def get_type(self) -> str:
         raise NotImplementedError()
 

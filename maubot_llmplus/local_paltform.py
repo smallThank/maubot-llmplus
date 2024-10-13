@@ -1,4 +1,5 @@
 import json
+from typing import List
 
 from aiohttp import ClientSession
 from maubot import Plugin
@@ -39,6 +40,14 @@ class Ollama(Platform):
                 finish_reason='success',
                 model=response_json['model']
             )
+
+    async def list_models(self) -> List[str]:
+        full_url = f"{self.url}/api/tags"
+        async with self.http.get(full_url) as response:
+            if response.status != 200:
+                return []
+            response_data = json.loads(await response.json())
+            return [model['name'] for model in response_data]
 
     def get_type(self) -> str:
         return "local_ai"

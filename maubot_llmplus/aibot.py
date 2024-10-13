@@ -148,6 +148,30 @@ class AiBotPlugin(Plugin):
             return Anthropic(self.config, self.name, self.http)
         raise ValueError(f"unknown backend type {use_platform}")
 
+    """
+        父命令
+    """
+    @command.new(name="ai", require_subcommand=True)
+    async def ai_command(self, event: MessageEvent) -> None:
+        pass
+
+    """
+    """
+    @ai_command.subcommand(help="")
+    async def info(self, event: MessageEvent) -> None:
+        pass
+
+    @ai_command.subcommand(help="")
+    @command.argument("argus")
+    async def model(self, event: MessageEvent, argus: str):
+        # 如果是list表示查看当前可以使用的模型列表
+        if argus == 'list':
+            platform = self.get_ai_platform()
+            models = platform.list_models()
+            await event.reply("\n".join(models))
+
+        # 如果不是，如果是其他的名称，表示这是一个模型名
+
     @classmethod
     def get_config_class(cls) -> Type[BaseProxyConfig]:
         return Config
