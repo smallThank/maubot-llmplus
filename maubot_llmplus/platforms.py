@@ -57,7 +57,7 @@ class Platform:
 
 
 
-async def get_context(plugin: Plugin, evt: MessageEvent) -> deque:
+async def get_context(plugin: Plugin, platform: Platform, evt: MessageEvent) -> deque:
     # 创建系统提示词上下文
     system_context = deque()
     # 生成当前时间
@@ -81,9 +81,9 @@ async def get_context(plugin: Plugin, evt: MessageEvent) -> deque:
         for item in additional_context:
             system_context.append(item)
         # 如果 消息长度已经超过了配置的消息条数，那么就抛出错误
-        if len(additional_context) > plugin.config['max_context_messages'] - 1:
+        if len(additional_context) > platform.max_context_messages - 1:
             raise ValueError(f"sorry, my configuration has too many additional prompts "
-                                 f"({plugin.config['max_context_messages']}) and i'll never see your message. "
+                                 f"({platform.max_context_messages}) and i'll never see your message. "
                                     f"Update my config to have fewer messages and i'll be able to answer your questions!")
 
     # 用户历史聊天上下文
@@ -111,7 +111,7 @@ async def get_context(plugin: Plugin, evt: MessageEvent) -> deque:
         # 计算单词量和消息数
         word_count += len(message.split())
         message_count += 1
-        if word_count >= plugin.config['max_words'] or message_count >= plugin.config['max_context_messages']:
+        if word_count >= platform.max_words or message_count >= platform.max_context_messages:
             break
         chat_context.appendleft({"role": role, "content": user + message})
 
