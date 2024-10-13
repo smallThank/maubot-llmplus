@@ -51,7 +51,7 @@ class Platform:
         调用AI对话接口, 响应结果
     """
 
-    async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
+    async def create_chat_completion(self, plugin: AbsExtraConfigPlugin, evt: MessageEvent) -> ChatCompletion:
         raise NotImplementedError()
 
     async def list_models(self) -> List[str]:

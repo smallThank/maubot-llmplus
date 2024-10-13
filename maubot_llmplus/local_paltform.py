@@ -1,14 +1,15 @@
-import json
+
 from typing import List
 
 from aiohttp import ClientSession
-from maubot import Plugin
+
 from mautrix.types import MessageEvent
 from mautrix.util.config import BaseProxyConfig
 
 import maubot_llmplus
 import maubot_llmplus.platforms
 from maubot_llmplus.platforms import Platform, ChatCompletion
+from maubot_llmplus.plugin import AbsExtraConfigPlugin
 
 
 class Ollama(Platform):
@@ -18,7 +19,7 @@ class Ollama(Platform):
         super().__init__(config, http)
         self.chat_api = '/api/chat'
 
-    async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
+    async def create_chat_completion(self, plugin: AbsExtraConfigPlugin, evt: MessageEvent) -> ChatCompletion:
         full_context = []
         context = await maubot_llmplus.platforms.get_context(plugin, self, evt)
         full_context.extend(list(context))
@@ -59,5 +60,5 @@ class LmStudio(Platform):
         super().__init__(config, http)
         pass
 
-    async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
+    async def create_chat_completion(self, plugin: AbsExtraConfigPlugin, evt: MessageEvent) -> ChatCompletion:
         pass

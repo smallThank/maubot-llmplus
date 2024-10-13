@@ -19,12 +19,13 @@ platforms:
     max_words: 1000
     max_context_messages: 20
   openai:
-    url:
+    url: https://api.openai.com
     api_key:
-    model:
-    max_tokens:
-    max_words:
-    temperature:
+    model: gpt4o
+    max_tokens: 2000
+    max_words: 1000
+    max_context_messages: 20
+    temperature: 1
   anthropic:
     url:
     api_key:
