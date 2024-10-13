@@ -15,7 +15,6 @@ from maubot_llmplus.thrid_platform import OpenAi, Anthropic
 配置文件加载
 """
 
-
 class Config(BaseProxyConfig):
     def do_update(self, helper: ConfigUpdateHelper) -> None:
         helper.copy("allowed_users")
@@ -30,12 +29,14 @@ class Config(BaseProxyConfig):
 
 class AiBotPlugin(Plugin):
 
+    name: str
+
     async def start(self) -> None:
         await super().start()
         # 加载并更新配置
         self.config.load_and_update()
         # 决定当前机器人的名称
-        super.name = self.config['name'] or \
+        self.name = self.config['name'] or \
                     await self.client.get_displayname(self.client.mxid) or \
                     self.client.parse_user_id(self.client.mxid)[0]
 
@@ -136,15 +137,15 @@ class AiBotPlugin(Plugin):
         if use_platform == 'local_ai':
             type = self.config['platforms']['local_ai']['type']
             if type == 'ollama':
-                return Ollama(self.config, self.http)
+                return Ollama(self.config, self.name, self.http)
             elif type == 'lmstudio':
-                return LmStudio(self.config, self.http)
+                return LmStudio(self.config, self.name, self.http)
             else:
                 raise ValueError(f"not found platform type: {type}")
         if use_platform == 'openai':
-            return OpenAi(self.config, self.http)
+            return OpenAi(self.config, self.name, self.http)
         if use_platform == 'anthropic':
-            return Anthropic(self.config, self.http)
+            return Anthropic(self.config, self.name, self.http)
         raise ValueError(f"unknown backend type {use_platform}")
 
     @classmethod

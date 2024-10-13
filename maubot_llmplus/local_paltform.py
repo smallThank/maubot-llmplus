@@ -13,13 +13,13 @@ from maubot_llmplus.platforms import Platform, ChatCompletion
 class Ollama(Platform):
     chat_api: str
 
-    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
-        super().__init__(config, http)
+    def __init__(self, config: BaseProxyConfig, name: str, http: ClientSession) -> None:
+        super().__init__(config, name, http)
         self.chat_api = '/api/chat'
 
     async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
         full_context = []
-        context = await maubot_llmplus.platforms.get_context(plugin, evt)
+        context = await maubot_llmplus.platforms.get_context(plugin, self, evt)
         full_context.extend(list(context))
 
         endpoint = f"{self.url}/api/chat"
@@ -47,8 +47,8 @@ class Ollama(Platform):
 
 class LmStudio(Platform):
 
-    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
-        super().__init__(config, http)
+    def __init__(self, config: BaseProxyConfig, name: str, http: ClientSession) -> None:
+        super().__init__(config, name, http)
         pass
 
     async def create_chat_completion(self, plugin: Plugin, evt: MessageEvent) -> ChatCompletion:
