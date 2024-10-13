@@ -39,6 +39,8 @@ class AiBotPlugin(Plugin):
         self.name = self.config['name'] or \
                     await self.client.get_displayname(self.client.mxid) or \
                     self.client.parse_user_id(self.client.mxid)[0]
+        self.log.debug(f"DEBUG gpt plugin started with bot name: {self.name}")
+
 
     """
     判断sender是否是allowed_users中的成员
