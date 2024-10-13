@@ -15,7 +15,6 @@ from mautrix.types import Format, TextMessageEventContent, EventType, RoomID, Us
 from mautrix.util import markdown
 from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
 
-from maubot_llmplus.llm import platforms
 from maubot_llmplus.llm.local_paltform import Ollama, LmStudio
 from maubot_llmplus.llm.platforms import Platform
 from maubot_llmplus.llm.thrid_platform import OpenAi, Anthropic
