@@ -68,7 +68,7 @@ class LmStudio(Platform) :
 
         endpoint = f"{self.url}/v1/chat/completions"
         headers = {"content-type": "application/json"}
-        req_body = {model: self.model, message: full_context, temperature: self.temperature, stream: False}
+        req_body = {"model": self.model, "messages": full_context, "temperature": self.temperature, "stream": False}
         async with self.http.post(
                 endpoint, headers=headers, data=json.dumps(req_body)
         ) as response:
