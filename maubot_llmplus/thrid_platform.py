@@ -1,5 +1,7 @@
 import json
 
+from typing import List
+
 from aiohttp import ClientSession
 from mautrix.types import MessageEvent
 from mautrix.util.config import BaseProxyConfig
