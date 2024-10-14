@@ -23,7 +23,8 @@ class AbsExtraConfigPlugin(Plugin):
 
 
 class Config(BaseProxyConfig):
-    _cur_model: str
+    cur_model: str
+    cur_platform: str
 
     def do_update(self, helper: ConfigUpdateHelper) -> None:
         helper.copy("allowed_users")
@@ -35,4 +36,6 @@ class Config(BaseProxyConfig):
         helper.copy("platforms")
         helper.copy("additional_prompt")
 
-        self._cur_model = helper.base['platforms'][helper.base['use_platform']]['model']
+        self.cur_platform = helper.base['use_platform'] if helper.base['use_platform'] != 'local_ai' else \
+            f"{helper.base['use_platform']}#{helper.base['platforms'][helper.base['local_ai']['type']]}"
+        self.cur_model = helper.base['platforms'][helper.base['use_platform']]['model']
