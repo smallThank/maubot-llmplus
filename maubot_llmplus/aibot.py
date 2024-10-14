@@ -217,7 +217,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
                 pass
             else:
                 self.config.cur_platform = argus
-                self.config.cur_model = self.config['platforms'][argus.split("#")[1]]['model']
+                self.config.cur_model = self.config['platforms'][argus.split("#")[0]]['model']
                 await event.react("✅")
         # 如果是openai或者是claude
         elif argus == 'openai' or argus == 'anthropic':
