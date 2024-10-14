@@ -142,10 +142,10 @@ class AiBotPlugin(AbsExtraConfigPlugin):
     async def info(self, event: MessageEvent) -> None:
         show_infos = []
         # 当前机器人名称
-        show_infos.append(f"bot name: {self.get_bot_name()}\n")
+        show_infos.append(f"bot name: {self.get_bot_name()}\n\n")
         # 查询当前使用的ai平台
-        show_infos.append(f"platform: {self.get_cur_platform()}\n")
-        show_infos.append("platform detail: \n")
+        show_infos.append(f"platform: {self.get_cur_platform()}\n\n")
+        show_infos.append("platform detail: \n\n")
         # 查询当前ai平台的配置信息
         p_m_dict = dict(self.config['platforms'][self.get_cur_platform()])
         for k, v in p_m_dict.items():
