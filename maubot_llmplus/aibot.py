@@ -148,7 +148,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
         show_infos.append("platform detail: \n")
         # 查询当前ai平台的配置信息
         p_m_dict = dict(self.config['platforms'][self.get_cur_platform()])
-        for k, v in p_m_dict:
+        for k, v in p_m_dict.items():
             show_infos.append(f"- {k}: {v}\n")
         # 当前使用的model
         show_infos.append(f"model: {self.config.cur_model}\n")
