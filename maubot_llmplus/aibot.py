@@ -150,6 +150,11 @@ class AiBotPlugin(AbsExtraConfigPlugin):
             platform = self.get_ai_platform()
             models = await platform.list_models()
             await event.reply("\n".join(models), markdown=True)
+            pass
+        # 如果是current，显示出当前的使用模型
+        if argus == 'current':
+            await event.reply(f"current use model is {self.config.cur_model}")
+            pass
 
     @ai_command.subcommand(help="")
     @command.argument("argus")
@@ -159,7 +164,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
         models = await platform.list_models()
         if f"- {argus}" in models:
             self.log.debug(f"switch model: {argus}")
-            self.config._cur_model = argus
+            self.config.cur_model = argus
             await event.react("✅")
         else:
             await event.reply("not found valid model")

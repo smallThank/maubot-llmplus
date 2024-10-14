@@ -39,6 +39,7 @@ class Platform:
         self.http = http
         self.config = config['platforms'][self.get_type()]
         self.url = self.config['url']
+        # 设置当前的使用模型，这里不直接使用config对象下的配置值，而是加入了与命令决定后的使用模型名称
         self.model = config.cur_model
         self.max_words = self.config['max_words']
         self.api_key = self.config['api_key']
