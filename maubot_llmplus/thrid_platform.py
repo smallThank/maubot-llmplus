@@ -58,6 +58,16 @@ class OpenAi(Platform):
                 model=choice.get("model", None)
             )
 
+    async def list_models(self) -> List[str]:
+        # 调用openai接口获取模型列表
+        full_url = f"{self.url}/v1/models"
+        headers = {'Authorization': self.api_key}
+        async with self.http.get(full_url, headers=headers) as response:
+            if response.status != 200:
+                return []
+            response_data = await response.json()
+            return [m["id"] for m in response_data["data"]]
+
     def get_type(self) -> str:
         return "openai"
 
