@@ -140,11 +140,39 @@ class AiBotPlugin(AbsExtraConfigPlugin):
     """
     @ai_command.subcommand(help="")
     async def info(self, event: MessageEvent) -> None:
+        show_infos = []
+        # 当前机器人名称
+        show_infos.append(f"bot name: {self.get_bot_name()}\n")
         # 查询当前使用的ai平台
+        show_infos.append(f"platform: {self.get_cur_platform()}\n")
+        show_infos.append("platform detail: \n")
         # 查询当前ai平台的配置信息
+        p_m_dict = dict(self.config['platforms'][self.get_cur_platform()])
+        for k, v in p_m_dict:
+            show_infos.append(f"- {k}: {v}\n")
         # 当前使用的model
-        # 列出model信息
+        show_infos.append(f"model: {self.config.cur_model}\n")
+        # TODO 列出model信息
         pass
+
+    """
+        获取实际平台名称
+    """
+    def get_cur_platform(self) -> str:
+        platform_model = self.config.cur_platform
+        return platform_model.split('#')[0]
+
+    @ai_command.subcommand(help="")
+    @command.argument("argus")
+    async def platform(self, event: MessageEvent, argus: str):
+        if argus == 'list':
+            p_dict = dict(self.config['platforms'])
+            platforms = [f"- {platform}" for platform in set(p_dict.keys())]
+            await event.reply("\n".join(platforms))
+            pass
+        if argus == 'current':
+            await event.reply(f"current use platform is {self.config.cur_platform}")
+            pass
 
     @ai_command.subcommand(help="")
     @command.argument("argus")
