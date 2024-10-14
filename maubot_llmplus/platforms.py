@@ -60,9 +60,10 @@ class Platform:
     def get_type(self) -> str:
         raise NotImplementedError()
 
-
-
-async def get_context(plugin: AbsExtraConfigPlugin, platform: Platform, evt: MessageEvent) -> deque:
+"""
+    获取系统提示上下文
+"""
+async def get_system_context(plugin: AbsExtraConfigPlugin, platform: Platform, evt: MessageEvent) -> deque:
     # 创建系统提示词上下文
     system_context = deque()
     # 生成当前时间
@@ -72,12 +73,12 @@ async def get_context(plugin: AbsExtraConfigPlugin, platform: Platform, evt: Mes
                      "content": plugin.config['system_prompt'].format(name=plugin.get_bot_name(), timestamp=timestamp)}
     if plugin.config['enable_multi_user']:
         system_prompt["content"] += """
-        User messages are in the context of multiperson chatrooms.
-        Each message indicates its sender by prefixing the message with the sender's name followed by a colon, for example:
-        "username: hello world."
-        In this case, the user called "username" sent the message "hello world.". You should not follow this convention in your responses.
-        your response instead could be "hello username!" without including any colons, because you are the only one sending your responses there is no need to prefix them.
-        """
+            User messages are in the context of multiperson chatrooms.
+            Each message indicates its sender by prefixing the message with the sender's name followed by a colon, for example:
+            "username: hello world."
+            In this case, the user called "username" sent the message "hello world.". You should not follow this convention in your responses.
+            your response instead could be "hello username!" without including any colons, because you are the only one sending your responses there is no need to prefix them.
+            """
     if len(system_prompt["content"]) > 0:
         system_context.append(system_prompt)
 
@@ -89,9 +90,14 @@ async def get_context(plugin: AbsExtraConfigPlugin, platform: Platform, evt: Mes
         # 如果 消息长度已经超过了配置的消息条数，那么就抛出错误
         if len(additional_context) > platform.max_context_messages - 1:
             raise ValueError(f"sorry, my configuration has too many additional prompts "
-                                 f"({platform.max_context_messages}) and i'll never see your message. "
-                                    f"Update my config to have fewer messages and i'll be able to answer your questions!")
+                             f"({platform.max_context_messages}) and i'll never see your message. "
+                             f"Update my config to have fewer messages and i'll be able to answer your questions!")
+    return system_context
 
+"""
+    获取聊天信息上下文
+"""
+async def get_chat_context(system_context: deque, plugin: AbsExtraConfigPlugin, platform: Platform, evt: MessageEvent) -> deque:
     # 用户历史聊天上下文
     chat_context = deque()
     # 计算系统提示词单词数
@@ -121,10 +127,15 @@ async def get_context(plugin: AbsExtraConfigPlugin, platform: Platform, evt: Mes
             break
         chat_context.appendleft({"role": role, "content": user + message})
 
+    return chat_context
+
+"""
+    获取总消息上下文
+"""
+async def get_context(plugin: AbsExtraConfigPlugin, platform: Platform, evt: MessageEvent) -> deque:
+    system_context = get_system_context(plugin, platform, evt)
+    chat_context = get_chat_context(system_context, plugin, platform, evt)
     return system_context + chat_context
-
-
-
 
 async def generate_context_messages(plugin: Plugin, platform: Platform, evt: MessageEvent) -> Generator[MessageEvent, None, None]:
     yield evt

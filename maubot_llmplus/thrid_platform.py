@@ -82,13 +82,17 @@ class Anthropic(Platform):
         self.max_tokens = self.config['max_tokens']
 
     async def create_chat_completion(self, plugin: AbsExtraConfigPlugin, evt: MessageEvent) -> ChatCompletion:
-        full_context = []
-        context = await maubot_llmplus.platforms.get_context(plugin, self, evt)
-        full_context.extend(list(context))
+        full_chat_context = []
+        chat_context = await maubot_llmplus.platforms.get_chat_context(plugin, self, evt)
+        full_chat_context.extend(list(chat_context))
+
+        full_system_context = []
+        system_context = await maubot_llmplus.platforms.get_system_context(plugin, self, evt)
+        full_system_context.extend(list(system_context))
 
         endpoint = f"{self.url}/v1/messages"
         headers = {"x-api-key": self.api_key, "anthropic-version": "2023-06-01", "content-type": "application/json"}
-        req_body = {"model": self.model, "max_tokens": self.max_tokens, "messages": full_context}
+        req_body = {"model": self.model, "max_tokens": self.max_tokens, "system": full_system_context, "messages": full_chat_context}
 
         async with self.http.post(endpoint, headers=headers, data=json.dumps(req_body)) as response:
             # plugin.log.debug(f"响应内容：{response.status}, {await response.json()}")
