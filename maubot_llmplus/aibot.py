@@ -206,9 +206,14 @@ class AiBotPlugin(AbsExtraConfigPlugin):
     @command.argument("argus")
     async def switch(self, event: MessageEvent, argus: str):
         # 判断是否是本地ai模型，如果是还需要解析#后的type
+        if argus == 'local_ai':
+            await event.reply("local ai platform has ollama and lmstudio. "
+                              "you can type `!ai use local_ai#{type}`. "
+                              "Example: local_ai#ollama")
+            pass
         if argus == 'local_ai#ollama' or argus == 'local_ai#lmstudio':
             if argus.split('#')[1] == self.config.cur_platform:
-                event.reply(f"current ai platform has be {argus}")
+                await event.reply(f"current ai platform has be {argus}")
                 pass
             else:
                 self.config.cur_platform = argus
@@ -217,7 +222,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
         # 如果是openai或者是claude
         elif argus == 'openai' or argus == 'anthropic':
             if argus == self.config.cur_platform:
-                event.reply(f"current ai platform has be {argus}")
+                await event.reply(f"current ai platform has be {argus}")
                 pass
             else:
                 self.config.cur_platform = argus
@@ -225,10 +230,10 @@ class AiBotPlugin(AbsExtraConfigPlugin):
                 self.config.cur_model = self.config['platforms'][argus]['model']
                 await event.react("✅")
         else:
-            event.reply(f"nof found ai platform: {argus}")
+            await event.reply(f"nof found ai platform: {argus}")
             pass
         self.log.debug(f"switch platform: {self.config.cur_platform}")
-        self.log.debug(f"use default cofig model: {self.config.cur_model}")
+        self.log.debug(f"use default config model: {self.config.cur_model}")
 
     @classmethod
     def get_config_class(cls) -> Type[BaseProxyConfig]:
