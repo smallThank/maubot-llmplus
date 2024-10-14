@@ -138,7 +138,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
 
     """
     """
-    @ai_command.subcommand(help="")
+    @ai_command.subcommand(help="View the configuration information currently in official use")
     async def info(self, event: MessageEvent) -> None:
         show_infos = []
         # 当前机器人名称
@@ -151,7 +151,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
         for k, v in p_m_dict.items():
             show_infos.append(f"- {k}: {v}\n")
         # 当前使用的model
-        show_infos.append(f"model: {self.config.cur_model}\n")
+        show_infos.append(f"\nmodel: {self.config.cur_model}\n")
         # TODO 列出model信息
         await event.reply("".join(show_infos), markdown=True)
         pass
@@ -163,7 +163,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
         platform_model = self.config.cur_platform
         return platform_model.split('#')[0]
 
-    @ai_command.subcommand(help="")
+    @ai_command.subcommand(help="List platforms or query current platform in use")
     @command.argument("argus")
     async def platform(self, event: MessageEvent, argus: str):
         if argus == 'list':
@@ -175,7 +175,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
             await event.reply(f"current use platform is {self.config.cur_platform}")
             pass
 
-    @ai_command.subcommand(help="")
+    @ai_command.subcommand(help="List models or query current model in use")
     @command.argument("argus")
     async def model(self, event: MessageEvent, argus: str):
         # 如果是list表示查看当前可以使用的模型列表
@@ -189,7 +189,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
             await event.reply(f"current use model is {self.config.cur_model}")
             pass
 
-    @ai_command.subcommand(help="")
+    @ai_command.subcommand(help="switch model in platform")
     @command.argument("argus")
     async def use(self, event: MessageEvent, argus: str):
         platform = self.get_ai_platform()
@@ -202,25 +202,33 @@ class AiBotPlugin(AbsExtraConfigPlugin):
         else:
             await event.reply("not found valid model")
 
-    @ai_command.subcommand(help="")
+    @ai_command.subcommand(help="switch platform")
     @command.argument("argus")
     async def switch(self, event: MessageEvent, argus: str):
         # 判断是否是本地ai模型，如果是还需要解析#后的type
         if argus == 'local_ai#ollama' or argus == 'local_ai#lmstudio':
             if argus.split('#')[1] == self.config.cur_platform:
                 event.reply(f"current ai platform has be {argus}")
+                pass
             else:
                 self.config.cur_platform = argus
+                self.config.cur_model = self.config['platforms'][argus.split("#")[1]]['model']
                 await event.react("✅")
         # 如果是openai或者是claude
         elif argus == 'openai' or argus == 'anthropic':
             if argus == self.config.cur_platform:
                 event.reply(f"current ai platform has be {argus}")
+                pass
             else:
                 self.config.cur_platform = argus
+                # 使用配置的默认模型
+                self.config.cur_model = self.config['platforms'][argus]['model']
                 await event.react("✅")
         else:
             event.reply(f"nof found ai platform: {argus}")
+            pass
+        self.log.debug(f"switch platform: {self.config.cur_platform}")
+        self.log.debug(f"use default cofig model: {self.config.cur_model}")
 
     @classmethod
     def get_config_class(cls) -> Type[BaseProxyConfig]:

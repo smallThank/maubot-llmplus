@@ -23,7 +23,7 @@ platforms:
   openai:
     url: https://api.openai.com
     api_key:
-    model: gpt4o
+    model: gpt-4o-mini
     max_tokens: 2000
     max_words: 1000
     max_context_messages: 20
