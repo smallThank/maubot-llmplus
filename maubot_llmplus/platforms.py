@@ -133,8 +133,8 @@ async def get_chat_context(system_context: deque, plugin: AbsExtraConfigPlugin, 
     获取总消息上下文
 """
 async def get_context(plugin: AbsExtraConfigPlugin, platform: Platform, evt: MessageEvent) -> deque:
-    system_context = get_system_context(plugin, platform, evt)
-    chat_context = get_chat_context(system_context, plugin, platform, evt)
+    system_context = await get_system_context(plugin, platform, evt)
+    chat_context = await get_chat_context(system_context, plugin, platform, evt)
     return system_context + chat_context
 
 async def generate_context_messages(plugin: Plugin, platform: Platform, evt: MessageEvent) -> Generator[MessageEvent, None, None]:

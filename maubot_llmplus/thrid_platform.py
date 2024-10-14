@@ -83,11 +83,10 @@ class Anthropic(Platform):
 
     async def create_chat_completion(self, plugin: AbsExtraConfigPlugin, evt: MessageEvent) -> ChatCompletion:
         full_chat_context = []
-        chat_context = await maubot_llmplus.platforms.get_chat_context(plugin, self, evt)
-        full_chat_context.extend(list(chat_context))
-
-        full_system_context = []
         system_context = await maubot_llmplus.platforms.get_system_context(plugin, self, evt)
+        full_system_context = []
+        chat_context = await maubot_llmplus.platforms.get_chat_context(system_context, plugin, self, evt)
+        full_chat_context.extend(list(chat_context))
         full_system_context.extend(list(system_context))
 
         endpoint = f"{self.url}/v1/messages"
