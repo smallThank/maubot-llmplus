@@ -212,7 +212,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
                               "Example: local_ai#ollama")
             pass
         if argus == 'local_ai#ollama' or argus == 'local_ai#lmstudio':
-            if argus.split('#')[1] == self.config.cur_platform:
+            if argus == self.config.cur_platform:
                 await event.reply(f"current ai platform has be {argus}")
                 pass
             else:
