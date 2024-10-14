@@ -2,7 +2,7 @@ allowed_users: []
 
 use_platform: local_ai
 
-name: "ollama"
+name: "ai bot"
 
 reply_in_thread: true
 

@@ -109,7 +109,7 @@ class Anthropic(Platform):
 
     async def list_models(self) -> List[str]:
         # 由于没有列出所有支持的模型的api，所有只能写死在代码中
-        models = ["Claude 3.5 Opus", "Claude 3.5 Sonnet", "Claude 3.5 Haiku", "Claude 3 Opus", "Claude 3 Sonnet	", "Claude 3 Haiku"]
+        models = ["claude-3-5-sonnet-20240620", "claude-3-opus-20240229	", "claude-3-sonnet-20240229", "claude-3-haiku-20240307"]
         return [f"- {m}" for m in models]
 
     def get_type(self) -> str:
