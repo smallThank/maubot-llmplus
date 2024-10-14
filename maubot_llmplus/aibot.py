@@ -140,6 +140,10 @@ class AiBotPlugin(AbsExtraConfigPlugin):
     """
     @ai_command.subcommand(help="")
     async def info(self, event: MessageEvent) -> None:
+        # 查询当前使用的ai平台
+        # 查询当前ai平台的配置信息
+        # 当前使用的model
+        # 列出model信息
         pass
 
     @ai_command.subcommand(help="")
