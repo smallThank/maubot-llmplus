@@ -153,6 +153,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
         # 当前使用的model
         show_infos.append(f"model: {self.config.cur_model}\n")
         # TODO 列出model信息
+        await event.reply("".join(show_infos), markdown=True)
         pass
 
     """
