@@ -39,7 +39,7 @@ class Platform:
         self.http = http
         self.config = config['platforms'][self.get_type()]
         self.url = self.config['url']
-        self.model = config._cur_model
+        self.model = config.cur_model
         self.max_words = self.config['max_words']
         self.api_key = self.config['api_key']
         self.max_context_messages = self.config['max_context_messages']
