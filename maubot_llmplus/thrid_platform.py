@@ -63,27 +63,54 @@ class OpenAi(Platform):
     async def list_models(self) -> List[str]:
         # 调用openai接口获取模型列表
         full_url = f"{self.url}/v1/models"
-        headers = {'Authorization': self.api_key}
+        headers = {'Authorization': f"Bearer {self.api_key}"}
         async with self.http.get(full_url, headers=headers) as response:
             if response.status != 200:
                 return []
             response_data = await response.json()
-            return [m["id"] for m in response_data["data"]]
+            return [f"- {m['id']}" for m in response_data["data"]]
 
     def get_type(self) -> str:
         return "openai"
 
 
 class Anthropic(Platform):
+    max_tokens: int
 
     def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
         super().__init__(config, http)
+        self.max_tokens = self.config['max_tokens']
 
     async def create_chat_completion(self, plugin: AbsExtraConfigPlugin, evt: MessageEvent) -> ChatCompletion:
-        # 获取系统提示词
-        # 获取额外的其他角色的提示词： role: user role: system
+        full_context = []
+        context = await maubot_llmplus.platforms.get_context(plugin, self, evt)
+        full_context.extend(list(context))
 
+        endpoint = f"{self.url}/v1/messages"
+        headers = {"x-api-key": self.api_key, "anthropic-version": "2023-06-01", "content-type": "application/json"}
+        req_body = {"model": self.model, "max_tokens": self.max_tokens, "messages": full_context}
+
+        async with self.http.post(endpoint, headers=headers, data=json.dumps(req_body)) as response:
+            # plugin.log.debug(f"响应内容：{response.status}, {await response.json()}")
+            if response.status != 200:
+                return ChatCompletion(
+                    message={},
+                    finish_reason=f"Error: {await response.text()}",
+                    model=None
+                )
+            response_json = await response.json()
+            text = "\n\n".join(c["text"] for c in response_json["content"])
+            return ChatCompletion(
+                message=dict(role="assistant", content=text),
+                finish_reason=response_json['stop_reason'],
+                model=response_json['model']
+            )
         pass
+
+    async def list_models(self) -> List[str]:
+        # 由于没有列出所有支持的模型的api，所有只能写死在代码中
+        models = ["Claude 3.5 Opus", "Claude 3.5 Sonnet", "Claude 3.5 Haiku", "Claude 3 Opus", "Claude 3 Sonnet	", "Claude 3 Haiku"]
+        return [f"- {m}" for m in models]
 
     def get_type(self) -> str:
         return "anthropic"

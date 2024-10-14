@@ -1,3 +1,4 @@
+import json
 
 from typing import List
 
@@ -13,11 +14,9 @@ from maubot_llmplus.plugin import AbsExtraConfigPlugin
 
 
 class Ollama(Platform):
-    chat_api: str
 
     def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
         super().__init__(config, http)
-        self.chat_api = '/api/chat'
 
     async def create_chat_completion(self, plugin: AbsExtraConfigPlugin, evt: MessageEvent) -> ChatCompletion:
         full_context = []
@@ -54,11 +53,47 @@ class Ollama(Platform):
         return "local_ai"
 
 
-class LmStudio(Platform):
+class LmStudio(Platform) :
+    temperature: int
 
     def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
         super().__init__(config, http)
+        self.temperature = self.config['temperature']
         pass
 
     async def create_chat_completion(self, plugin: AbsExtraConfigPlugin, evt: MessageEvent) -> ChatCompletion:
-        pass
+        full_context = []
+        context = await maubot_llmplus.platforms.get_context(plugin, self, evt)
+        full_context.extend(list(context))
+
+        endpoint = f"{self.url}/v1/chat/completions"
+        headers = {"content-type": "application/json"}
+        req_body = {model: self.model, message: full_context, temperature: self.temperature, stream: False}
+        async with self.http.post(
+                endpoint, headers=headers, data=json.dumps(req_body)
+        ) as response:
+            # plugin.log.debug(f"响应内容：{response.status}, {await response.json()}")
+            if response.status != 200:
+                return ChatCompletion(
+                    message={},
+                    finish_reason=f"Error: {await response.text()}",
+                    model=None
+                )
+            response_json = await response.json()
+            choice = response_json["choices"][0]
+            return ChatCompletion(
+                message=choice["message"],
+                finish_reason=choice["finish_reason"],
+                model=choice.get("model", None)
+            )
+
+    async def list_models(self) -> List[str]:
+        full_url = f"{self.url}/v1/models"
+        async with self.http.get(full_url) as response:
+            if response.status != 200:
+                return []
+            response_data = await response.json()
+            return [f"- {m['id']}" for m in response_data["data"]]
+
+    def get_type(self) -> str:
+        return "local_ai"
