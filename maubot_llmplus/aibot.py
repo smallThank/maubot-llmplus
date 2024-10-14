@@ -124,7 +124,7 @@ class AiBotPlugin(AbsExtraConfigPlugin):
             return Anthropic(self.config, self.http)
         if use_platform == 'local_ai#ollama':
             return Ollama(self.config, self.http)
-        if use_platform == 'lmstudio':
+        if use_platform == 'local_ai#lmstudio':
             return LmStudio(self.config, self.http)
         else:
             raise ValueError(f"not found platform type: {type}")
