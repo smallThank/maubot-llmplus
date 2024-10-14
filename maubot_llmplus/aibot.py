@@ -146,18 +146,17 @@ class AiBotPlugin(AbsExtraConfigPlugin):
     @command.argument("argus")
     async def model(self, event: MessageEvent, argus: str):
         # 如果是list表示查看当前可以使用的模型列表
-        if argus == '#list':
+        if argus == 'list':
             platform = self.get_ai_platform()
             models = await platform.list_models()
             await event.reply("\n".join(models), markdown=True)
-
 
     @ai_command.subcommand(help="")
     @command.argument("argus")
     async def use(self, event: MessageEvent, argus: str):
         platform = self.get_ai_platform()
         # 获取模型列表，判断使用的模型是否存在于列表中
-        models = platform.list_models()
+        models = await platform.list_models()
         if f"- {argus}" in models:
             self.log.debug(f"switch model: {argus}")
             self.config._cur_model = argus
