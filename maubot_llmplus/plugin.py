@@ -37,5 +37,5 @@ class Config(BaseProxyConfig):
         helper.copy("additional_prompt")
 
         self.cur_platform = helper.base['use_platform'] if helper.base['use_platform'] != 'local_ai' else \
-            f"{helper.base['use_platform']}#{helper.base['platforms'][helper.base['local_ai']['type']]}"
+            f"{helper.base['use_platform']}#{helper.base['platforms']['local_ai']['type']}"
         self.cur_model = helper.base['platforms'][helper.base['use_platform']]['model']
