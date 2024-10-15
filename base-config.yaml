@@ -1,15 +1,20 @@
+# allow users
 allowed_users: []
 
+# current use platform
 use_platform: local_ai
 
+# bot name
 name: "ai bot"
 
 reply_in_thread: true
 
 enable_multi_user: true
 
+# system prompt
 system_prompt: "response in chinese"
 
+# platform config
 platforms:
   local_ai:
     type: ollama
@@ -36,6 +41,7 @@ platforms:
     max_tokens: 2000
     max_context_messages: 20
 
+# additional prompt
 additional_prompt:
   - role: user
     content: "What model is currently in use?"
