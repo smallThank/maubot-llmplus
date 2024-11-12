@@ -13,7 +13,6 @@ from maubot_llmplus.plugin import AbsExtraConfigPlugin
 
 
 class OpenAi(Platform):
-
     max_tokens: int
     temperature: int
 
@@ -90,7 +89,8 @@ class Anthropic(Platform):
 
         endpoint = f"{self.url}/v1/messages"
         headers = {"x-api-key": self.api_key, "anthropic-version": "2023-06-01", "content-type": "application/json"}
-        req_body = {"model": self.model, "max_tokens": self.max_tokens, "system": self.system_prompt, "messages": full_chat_context}
+        req_body = {"model": self.model, "max_tokens": self.max_tokens, "system": self.system_prompt,
+                    "messages": full_chat_context}
 
         async with self.http.post(endpoint, headers=headers, data=json.dumps(req_body)) as response:
             # plugin.log.debug(f"响应内容：{response.status}, {await response.json()}")
@@ -111,8 +111,65 @@ class Anthropic(Platform):
 
     async def list_models(self) -> List[str]:
         # 由于没有列出所有支持的模型的api，所有只能写死在代码中
-        models = ["claude-3-5-sonnet-20240620", "claude-3-opus-20240229	", "claude-3-sonnet-20240229", "claude-3-haiku-20240307"]
+        models = ["claude-3-5-sonnet-20240620", "claude-3-opus-20240229	", "claude-3-sonnet-20240229",
+                  "claude-3-haiku-20240307"]
         return [f"- {m}" for m in models]
 
     def get_type(self) -> str:
         return "anthropic"
+
+
+class XAi(Platform):
+
+    def __init__(self, config: BaseProxyConfig, http: ClientSession) -> None:
+        super().__init__(config, http)
+
+    def create_chat_completion(self, plugin: AbsExtraConfigPlugin, evt: MessageEvent) -> ChatCompletion:
+        full_context = []
+        context = await maubot_llmplus.platforms.get_context(plugin, self, evt)
+        full_context.extend(list(context))
+
+        headers = {
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {self.api_key}"
+        }
+        request_body = {
+            "message": full_context,
+            "model": self.model,
+            "stream": False
+        }
+
+        if 'temperature' in self.config and self.temperature:
+            request_body["temperature"] = self.temperature
+
+        endpoint = f"{self.url}/v1/chat/completions"
+        with self.http.post(url=endpoint, data=json.dumps(request_body), headers=headers) as resp:
+            # plugin.log.debug(f"响应内容：{response.status}, {await response.json()}")
+            if response.status != 200:
+                return ChatCompletion(
+                    message={},
+                    finish_reason=f"Error: {await response.text()}",
+                    model=None
+                )
+            response_json = await response.json()
+            choice = response_json["choices"][0]
+            return ChatCompletion(
+                message=choice["message"],
+                finish_reason=choice["finish_reason"],
+                model=response_json["model"]
+            )
+
+        pass
+
+    def list_models(self) -> List[str]:
+        # 调用openai接口获取模型列表
+        full_url = f"{self.url}/v1/models"
+        async with self.http.get(full_url) as response:
+            if response.status != 200:
+                return []
+            response_data = await response.json()
+            return [f"- {m['id']}" for m in response_data["models"]]
+        pass
+
+    def get_type(self) -> str:
+        return "xai"

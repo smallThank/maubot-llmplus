@@ -10,7 +10,7 @@ from mautrix.util.config import BaseProxyConfig, ConfigUpdateHelper
 from maubot_llmplus.local_paltform import Ollama, LmStudio
 from maubot_llmplus.platforms import Platform
 from maubot_llmplus.plugin import AbsExtraConfigPlugin, Config
-from maubot_llmplus.thrid_platform import OpenAi, Anthropic
+from maubot_llmplus.thrid_platform import OpenAi, Anthropic, XAi
 
 class AiBotPlugin(AbsExtraConfigPlugin):
 
@@ -122,6 +122,8 @@ class AiBotPlugin(AbsExtraConfigPlugin):
             return OpenAi(self.config, self.http)
         if use_platform == 'anthropic':
             return Anthropic(self.config, self.http)
+        if use_platform == 'xai':
+            return XAi(self.config, self.http)
         if use_platform == 'local_ai#ollama':
             return Ollama(self.config, self.http)
         if use_platform == 'local_ai#lmstudio':
